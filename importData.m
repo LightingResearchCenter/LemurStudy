@@ -1,5 +1,5 @@
-function importData()
-% IMPORTDATA Import processed Dimesimeter data for Lemurs and save as .mat
+function importData
+%IMPORTDATA Import processed Dimesimeter data for Lemurs and save as .mat
 
 load('dimesimeterLookup.mat','ID','folder','gender','processedFile',...
     'species','startTime','stopTime','subject');
@@ -24,7 +24,7 @@ save('lemurData.mat','ID','gender','species','subject','time','lux',...
 end
 
 function [time,lux,CS,AI] = readData(dataPath,startTime,stopTime)
-% READDATA Read in text data and trim to specified range
+%READDATA Read in text data and trim to specified range
 
 % Read data from text file
 fid = fopen(dataPath);
