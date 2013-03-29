@@ -1,7 +1,7 @@
 function speciesMillerPlot
 %SPECIESMILLERPLOT Creates Miller Plots of data averaged across a species
 
-load('lemurData.mat','species','subject','time','CS','AI');
+load('cleanData.mat','species','subject','time','CS','AI');
 
 unqSpecies = unique(species);
 n = length(unqSpecies);
