@@ -2,6 +2,7 @@ function speciesMillerPlot
 %SPECIESMILLERPLOT Creates Miller Plots of data averaged across a species
 
 load('cleanData.mat','species','subject','time','CS','AI');
+load(fullfile('astronomicalData','sunrise_set.mat'),'sunRise','sunSet');
 
 unqSpecies = unique(species);
 n = length(unqSpecies);
@@ -20,7 +21,8 @@ for i1 = 1:n
     MillerPlot(timeIndex{i1},AI1{i1},CS1{i1},floor(timeIndex{i1}(end)),...
         unqSpecies{i1});
     % Plot solar and lunar conditions
-    
+    yLims = ylim(gca);
+    plotSun(time{i1},max(timeIndex{i1}),sunRise,sunSet,yLims);
     % Save to disk
     print(gcf,'-dpdf',fullfile('speciesMillerPlots',[unqSpecies{i1},...
         '.pdf']));
@@ -119,5 +121,24 @@ for i2 = 1:n
     end
 end
 
+end
+
+function plotSun(time,days,sunRise,sunSet,yLims)
+y = yLims(1);
+h = yLims(2) - yLims(1);
+rise1 = sunRise(find(sunRise >= time(1),1,'first'));
+rise2 = sunRise(find(sunRise <= time(1)+days,1,'last'));
+xRise = min([rise1,rise2]);
+xRise = xRise - floor(xRise);
+wRise = abs((rise2 - floor(rise2)) - (rise1 - floor(rise1)));
+hRise = rectangle('Position',[xRise,y,wRise,h]);
+set(hRise,'FaceColor',r);
+set1 = sunRise(find(sunSet >= time(1),1,'first'));
+set2 = sunRise(find(sunSet <= time(1)+days,1,'last'));
+xSet = min([set1,set2]);
+xSet = xSet - floor(xSet);
+wSet = abs((set2 - floor(set2)) - (set1 - floor(set1)));
+hSet = rectangle('Position',[xSet,y,wSet,h]);
+set(hSet,'FaceColor',r);
 end
 
