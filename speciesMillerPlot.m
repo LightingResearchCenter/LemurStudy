@@ -16,9 +16,12 @@ for i1 = 1:n
     % Process data
     [timeIndex{i1},CS1{i1},AI1{i1}] = averageSpecies(time(spcIdx{i1}),...
         CS(spcIdx{i1}),AI(spcIdx{i1}));
-    % Generate figure and save to disk
+    % Generate figure
     MillerPlot(timeIndex{i1},AI1{i1},CS1{i1},floor(timeIndex{i1}(end)),...
         unqSpecies{i1});
+    % Plot solar and lunar conditions
+    
+    % Save to disk
     print(gcf,'-dpdf',fullfile('speciesMillerPlots',[unqSpecies{i1},...
         '.pdf']));
     close;
