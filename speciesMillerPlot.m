@@ -3,6 +3,7 @@ function speciesMillerPlot
 
 load('cleanData.mat','species','subject','time','CS','AI');
 load(fullfile('astronomicalData','sunrise_set.mat'),'sunRise','sunSet');
+load(fullfile('astronomicalData','moonrise_set.mat'),'moonRise','moonSet');
 
 unqSpecies = unique(species);
 n = length(unqSpecies);
@@ -23,7 +24,9 @@ for i1 = 1:n
     % Plot solar and lunar conditions
     yLims = ylim(gca);
     plotSun(time{i1},max(timeIndex{i1}),sunRise,sunSet,yLims);
+    plotMoon(time{i1},max(timeIndex{i1}),moonRise,moonSet,yLims);
     % Save to disk
+    orient landscape;
     print(gcf,'-dpdf',fullfile('speciesMillerPlots',[unqSpecies{i1},...
         '.pdf']));
     close;
@@ -136,5 +139,20 @@ xSet1 = (set1 - floor(set1))*24;
 xSet2 = (set2 - floor(set2))*24;
 p2=patch([xSet1 xSet2 xSet2 xSet1],[yLims(1) yLims(1) yLims(2) yLims(2)],'r');
 set(p2,'FaceAlpha',0.5,'EdgeColor','none');
+end
+
+function plotMoon(time,days,moonRise,moonSet,yLims)
+rise1 = moonRise(find(moonRise >= time(1),1,'first'));
+rise2 = moonRise(find(moonRise <= time(1)+days,1,'last'));
+xRise1 = (rise1 - floor(rise1))*24;
+xRise2 = (rise2 - floor(rise2))*24;
+p1=patch([xRise1 xRise2 xRise2 xRise1],[yLims(1) yLims(1) yLims(2) yLims(2)],'b');;
+set(p1,'FaceAlpha',0.25,'EdgeColor','none');
+set1 = moonSet(find(moonSet >= time(1),1,'first'));
+set2 = moonSet(find(moonSet <= time(1)+days,1,'last'));
+xSet1 = (set1 - floor(set1))*24;
+xSet2 = (set2 - floor(set2))*24;
+p2=patch([xSet1 xSet2 xSet2 xSet1],[yLims(1) yLims(1) yLims(2) yLims(2)],'b');
+set(p2,'FaceAlpha',0.25,'EdgeColor','none');
 end
 
