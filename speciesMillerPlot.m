@@ -124,21 +124,17 @@ end
 end
 
 function plotSun(time,days,sunRise,sunSet,yLims)
-y = yLims(1);
-h = yLims(2) - yLims(1);
 rise1 = sunRise(find(sunRise >= time(1),1,'first'));
 rise2 = sunRise(find(sunRise <= time(1)+days,1,'last'));
-xRise = min([rise1,rise2]);
-xRise = xRise - floor(xRise);
-wRise = abs((rise2 - floor(rise2)) - (rise1 - floor(rise1)));
-hRise = rectangle('Position',[xRise,y,wRise,h]);
-set(hRise,'FaceColor',r);
-set1 = sunRise(find(sunSet >= time(1),1,'first'));
-set2 = sunRise(find(sunSet <= time(1)+days,1,'last'));
-xSet = min([set1,set2]);
-xSet = xSet - floor(xSet);
-wSet = abs((set2 - floor(set2)) - (set1 - floor(set1)));
-hSet = rectangle('Position',[xSet,y,wSet,h]);
-set(hSet,'FaceColor',r);
+xRise1 = (rise1 - floor(rise1))*24;
+xRise2 = (rise2 - floor(rise2))*24;
+p1=patch([xRise1 xRise2 xRise2 xRise1],[yLims(1) yLims(1) yLims(2) yLims(2)],'r');;
+set(p1,'FaceAlpha',0.5,'EdgeColor','none');
+set1 = sunSet(find(sunSet >= time(1),1,'first'));
+set2 = sunSet(find(sunSet <= time(1)+days,1,'last'));
+xSet1 = (set1 - floor(set1))*24;
+xSet2 = (set2 - floor(set2))*24;
+p2=patch([xSet1 xSet2 xSet2 xSet1],[yLims(1) yLims(1) yLims(2) yLims(2)],'r');
+set(p2,'FaceAlpha',0.5,'EdgeColor','none');
 end
 
