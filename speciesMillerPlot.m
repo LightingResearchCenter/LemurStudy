@@ -1,9 +1,18 @@
 function speciesMillerPlot
 %SPECIESMILLERPLOT Creates Miller Plots of data averaged across a species
 
-load('cleanData.mat','species','subject','time','CS','AI');
-load(fullfile('astronomicalData','sunrise_set.mat'),'sunRise','sunSet');
-load(fullfile('astronomicalData','moonrise_set.mat'),'moonRise','moonSet');
+load('cleanData.mat','species','subject','time','CS','AI','sDate','eDate');
+
+% Create figure
+close all;
+figure1 = figure;
+set(figure1,'PaperUnits','inches',...
+    'PaperType','usletter',...
+    'PaperOrientation','portrait',...
+    'PaperPositionMode','manual',...
+    'PaperPosition',[0 0 8.5 11],...
+    'Units','inches',...
+    'Position',[0 0 8.5 11]);
 
 unqSpecies = unique(species);
 n = length(unqSpecies);
@@ -12,25 +21,30 @@ spcIdx = cell(n,1); % indicies of subjects that belong to each species
 timeIndex = cell(n,1);
 CS1 = cell(n,1);
 AI1 = cell(n,1);
-close all;
+dateRange = zeros(n,2);
+% Set position values for plots
+x = .5/8.5;
+w = 7.5/8.5;
+y0 = .5/8.5;
+h = (7.5/n-.125)/8.5;
+d = .125/8.5 + h;
+
 for i1 = 1:n
     spcIdx{i1} = find(strcmp(unqSpecies{i1},species) == 1);
     % Process data
-    [timeIndex{i1},CS1{i1},AI1{i1}] = averageSpecies(time(spcIdx{i1}),...
-        CS(spcIdx{i1}),AI(spcIdx{i1}));
+    [timeIndex{i1},CS1{i1},AI1{i1}] = ...
+        averageSpecies(time(spcIdx{i1}),CS(spcIdx{i1}),AI(spcIdx{i1}));
+    dateRange(i1,1) = min(sDate(spcIdx{i1}));
+    dateRange(i1,2) = max(eDate(spcIdx{i1}));
+    % Set figure position
+    y = y0 + d*(i1-1);
+    plotPosition = [x y w h];
     % Generate figure
     MillerPlot(timeIndex{i1},AI1{i1},CS1{i1},floor(timeIndex{i1}(end)),...
-        unqSpecies{i1});
-    % Plot solar and lunar conditions
-    yLims = ylim(gca);
-    plotSun(time{i1},max(timeIndex{i1}),sunRise,sunSet,yLims);
-    plotMoon(time{i1},max(timeIndex{i1}),moonRise,moonSet,yLims);
-    % Save to disk
-    orient landscape;
-    print(gcf,'-dpdf',fullfile('speciesMillerPlots',[unqSpecies{i1},...
-        '.pdf']));
-    close;
+        unqSpecies{i1},plotPosition,dateRange(i1,:));
 end
+% Save to disk
+print(gcf,'-dpdf','speciesMillerPlots.pdf');
 
 end
 
@@ -124,35 +138,5 @@ for i2 = 1:n
     end
 end
 
-end
-
-function plotSun(time,days,sunRise,sunSet,yLims)
-rise1 = sunRise(find(sunRise >= time(1),1,'first'));
-rise2 = sunRise(find(sunRise <= time(1)+days,1,'last'));
-xRise1 = (rise1 - floor(rise1))*24;
-xRise2 = (rise2 - floor(rise2))*24;
-p1=patch([xRise1 xRise2 xRise2 xRise1],[yLims(1) yLims(1) yLims(2) yLims(2)],'r');;
-set(p1,'FaceAlpha',0.5,'EdgeColor','none');
-set1 = sunSet(find(sunSet >= time(1),1,'first'));
-set2 = sunSet(find(sunSet <= time(1)+days,1,'last'));
-xSet1 = (set1 - floor(set1))*24;
-xSet2 = (set2 - floor(set2))*24;
-p2=patch([xSet1 xSet2 xSet2 xSet1],[yLims(1) yLims(1) yLims(2) yLims(2)],'r');
-set(p2,'FaceAlpha',0.5,'EdgeColor','none');
-end
-
-function plotMoon(time,days,moonRise,moonSet,yLims)
-rise1 = moonRise(find(moonRise >= time(1),1,'first'));
-rise2 = moonRise(find(moonRise <= time(1)+days,1,'last'));
-xRise1 = (rise1 - floor(rise1))*24;
-xRise2 = (rise2 - floor(rise2))*24;
-p1=patch([xRise1 xRise2 xRise2 xRise1],[yLims(1) yLims(1) yLims(2) yLims(2)],'b');;
-set(p1,'FaceAlpha',0.25,'EdgeColor','none');
-set1 = moonSet(find(moonSet >= time(1),1,'first'));
-set2 = moonSet(find(moonSet <= time(1)+days,1,'last'));
-xSet1 = (set1 - floor(set1))*24;
-xSet2 = (set2 - floor(set2))*24;
-p2=patch([xSet1 xSet2 xSet2 xSet1],[yLims(1) yLims(1) yLims(2) yLims(2)],'b');
-set(p2,'FaceAlpha',0.25,'EdgeColor','none');
 end
 
