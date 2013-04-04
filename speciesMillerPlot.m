@@ -14,7 +14,14 @@ set(figure1,'PaperUnits','inches',...
     'Units','inches',...
     'Position',[0 0 8.5 11]);
 
-unqSpecies = unique(species);
+unqSpecies0 = unique(species);
+% Rearrange
+unqSpecies = unqSpecies0;
+unqSpecies(5) = unqSpecies0(3);
+unqSpecies(4) = unqSpecies0(1);
+unqSpecies(3) = unqSpecies0(2);
+unqSpecies(2) = unqSpecies0(5);
+unqSpecies(1) = unqSpecies0(4);
 n = length(unqSpecies);
 
 spcIdx = cell(n,1); % indicies of subjects that belong to each species
@@ -24,7 +31,7 @@ AI1 = cell(n,1);
 dateRange = zeros(n,2);
 % Set position values for plots
 x = .5/8.5;
-w = 7.5/8.5;
+w = 8/8.5;
 y0 = .5/8.5;
 h = (7.5/n-.125)/8.5;
 d = .125/8.5 + h;
@@ -44,7 +51,10 @@ for i1 = 1:n
         unqSpecies{i1},plotPosition,dateRange(i1,:));
 end
 % Save to disk
-print(gcf,'-dpdf','speciesMillerPlots.pdf');
+print(gcf,'-dpdf','speciesMillerPlots.pdf','-r200');
+print(gcf,'-depsc','speciesMillerPlots.eps');
+print(gcf,'-dpng','speciesMillerPlots.png','-r200');
+print(gcf,'-dtiffn','speciesMillerPlots.tif','-r200');
 
 end
 
