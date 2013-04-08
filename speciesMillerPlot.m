@@ -14,14 +14,7 @@ set(figure1,'PaperUnits','inches',...
     'Units','inches',...
     'Position',[0 0 8.5 11]);
 
-unqSpecies0 = unique(species);
-% Rearrange
-unqSpecies = unqSpecies0;
-unqSpecies(5) = unqSpecies0(3);
-unqSpecies(4) = unqSpecies0(1);
-unqSpecies(3) = unqSpecies0(2);
-unqSpecies(2) = unqSpecies0(5);
-unqSpecies(1) = unqSpecies0(4);
+unqSpecies = unique(species);
 n = length(unqSpecies);
 
 spcIdx = cell(n,1); % indicies of subjects that belong to each species
@@ -35,7 +28,7 @@ w = 8/8.5;
 y0 = .5/8.5;
 h = (7.5/n-.125)/8.5;
 d = .125/8.5 + h;
-
+plotOrder = [2,1,5,3,4];
 for i1 = 1:n
     spcIdx{i1} = find(strcmp(unqSpecies{i1},species) == 1);
     % Process data
@@ -44,7 +37,8 @@ for i1 = 1:n
     dateRange(i1,1) = min(sDate(spcIdx{i1}));
     dateRange(i1,2) = max(eDate(spcIdx{i1}));
     % Set figure position
-    y = y0 + d*(i1-1);
+    i2 = plotOrder(i1);
+    y = y0 + d*(i2-1);
     plotPosition = [x y w h];
     % Generate figure
     MillerPlot(timeIndex{i1},AI1{i1},CS1{i1},floor(timeIndex{i1}(end)),...
@@ -55,7 +49,7 @@ print(gcf,'-dpdf','speciesMillerPlots.pdf','-r200');
 print(gcf,'-depsc','speciesMillerPlots.eps');
 print(gcf,'-dpng','speciesMillerPlots.png','-r200');
 print(gcf,'-dtiffn','speciesMillerPlots.tif','-r200');
-
+save('speciesData.mat');
 end
 
 function [timeIndex,CS,AI] = averageSpecies(time0,CS0,AI0)
