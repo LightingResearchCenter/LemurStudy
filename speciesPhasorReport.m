@@ -4,6 +4,18 @@ function speciesPhasorReport
 load('speciesData.mat');
 addpath('C:\Users\jonesg5\Documents\GitHub\PhasorReport');
 
-PhasorReport(timeIndex{1},CS1{1},AI1{1},unqSpecies{1},floor(max(timeIndex{1})))
+n = length(unqSpecies);
+close all;
+for i1 = 1:n
+    PhasorReport(timeIndex{i1},CS1{i1},AI1{i1},unqSpecies{i1})
+    % Save to disk
+    fileName = fullfile('phasorReports',unqSpecies{i1});
+    print(gcf,'-dpdf',[fileName,'.pdf'],'-r200');
+    print(gcf,'-dpng',[fileName,'.png'],'-r200');
+    print(gcf,'-dtiffn',[fileName,'.tif'],'-r200');
+    close;
+end
+
+
 end
 
