@@ -2,12 +2,13 @@ function speciesPhasorReport
 %SPECIESPHASORREPORT Generate Phasor Report for each species
 %   Requires PhasorReport package
 load('speciesData.mat');
-addpath('C:\Users\jonesg5\Documents\GitHub\PhasorReport');
+addpath('PhasorReport');
 
 n = length(unqSpecies);
 close all;
 for i1 = 1:n
-    PhasorReport(timeIndex{i1},CS1{i1},AI1{i1},unqSpecies{i1})
+    idx = spcIdx{i1};
+    PhasorReport(timeIndex{i1},CS1{i1},AI1{i1},time(idx),CS(idx),AI(idx),unqSpecies{i1})
     % Save to disk
     fileName = fullfile('phasorReports',unqSpecies{i1});
     print(gcf,'-dpdf',[fileName,'.pdf'],'-r200');
