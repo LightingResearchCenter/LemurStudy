@@ -1,23 +1,45 @@
 function speciesMillerPlot
 %SPECIESMILLERPLOT Creates Miller Plots of data averaged across a species
 
-load('cleanData.mat','species','subject','time','CS','AI','sDate','eDate');
+load('cleanData.mat','species','commonName','subject','time','CS','AI','sDate','eDate');
 
 % Create figure
 close all;
 figure1 = figure;
+paperPosition = [0 0 8.5 11];
 set(figure1,'PaperUnits','inches',...
     'PaperType','usletter',...
     'PaperOrientation','portrait',...
     'PaperPositionMode','manual',...
-    'PaperPosition',[0 0 8.5 11],...
+    'PaperPosition',paperPosition,...
     'Units','inches',...
-    'Position',[0 0 8.5 11]);
+    'Position',paperPosition);
+
+% Set spacing values
+xMargin = 0.5/paperPosition(3);
+xSpace = 0.125/paperPosition(3);
+yMargin = 0.5/paperPosition(4);
+ySpace = 0.125/paperPosition(4);
+
+% Create date stamp
+dateStamp = ['Printed: ',datestr(now,'mmm. dd, yyyy HH:MM')];
+datePosition = [0.8,1-yMargin,0.1,0.1];
+dateHandle = annotation(figure1,'textbox',datePosition,...
+    'String',dateStamp,...
+    'FitBoxToText','on',...
+    'HorizontalAlignment','right',...
+    'LineStyle','none');
+% Shift left and down
+datePosition = get(dateHandle,'Position');
+datePosition(1) = 1-xMargin-datePosition(3);
+datePosition(2) = 1-yMargin-datePosition(4); 
+set(dateHandle,'Position',datePosition);
 
 unqSpecies = unique(species);
 n = length(unqSpecies);
 
 spcIdx = cell(n,1); % indicies of subjects that belong to each species
+unqName = cell(n,1);
 timeIndex = cell(n,1);
 CS1 = cell(n,1);
 AI1 = cell(n,1);
@@ -28,9 +50,10 @@ w = 8/8.5;
 y0 = .5/8.5;
 h = (7.5/n-.125)/8.5;
 d = .125/8.5 + h;
-plotOrder = [2,1,5,3,4];
+plotOrder = [2,5,1,3,4];
 for i1 = 1:n
     spcIdx{i1} = find(strcmp(unqSpecies{i1},species) == 1);
+    unqName(i1) = unique(commonName(spcIdx{i1}));
     % Process data
     [timeIndex{i1},CS1{i1},AI1{i1}] = ...
         averageSpecies(time(spcIdx{i1}),CS(spcIdx{i1}),AI(spcIdx{i1}));
@@ -45,10 +68,7 @@ for i1 = 1:n
         unqSpecies{i1},plotPosition,dateRange(i1,:));
 end
 % Save to disk
-print(gcf,'-dpdf','speciesMillerPlots.pdf','-r200');
-print(gcf,'-depsc','speciesMillerPlots.eps');
-print(gcf,'-dpng','speciesMillerPlots.png','-r200');
-print(gcf,'-dtiffn','speciesMillerPlots.tif','-r200');
+print(gcf,'-dpdf','speciesMillerPlots.pdf','-painters');
 save('speciesData.mat');
 end
 

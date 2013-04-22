@@ -2,7 +2,7 @@ function importData
 %IMPORTDATA Import processed Dimesimeter data for Lemurs and save as .mat
 
 load('dimesimeterLookup.mat','ID','folder','gender','processedFile',...
-    'species','startTime','stopTime','subject');
+    'species','commonName','startTime','stopTime','subject');
 
 % Construct file paths
 textPath = fullfile('textData',folder,processedFile);
@@ -19,7 +19,7 @@ for i1 = 1:n
         startTime(i1),stopTime(i1));
 end
 
-save('lemurData.mat','ID','gender','species','subject','time','lux',...
+save('lemurData.mat','ID','gender','species','commonName','subject','time','lux',...
     'CS','AI');
 end
 

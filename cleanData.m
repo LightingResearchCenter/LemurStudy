@@ -1,14 +1,5 @@
 function cleanData
 load('lemurData.mat')
-% Remove last 3 subjects since they were always indoors
-AI(21:23) = [];
-CS(21:23) = [];
-ID(21:23) = [];
-gender(21:23) = [];
-lux(21:23) = [];
-species(21:23) = [];
-subject(21:23) = [];
-time(21:23) = [];
 
 % Create start and end dates
 Y = 2012*ones(20,1);
@@ -29,7 +20,7 @@ for i1 = 1:20
     time{i1, 1} = time{i1, 1}(sIdx:eIdx);
 end
 
-save('cleanData.mat','AI','CS','ID','gender','lux','species','subject',...
+save('cleanData.mat','AI','CS','ID','gender','lux','species','commonName','subject',...
     'time','sDate','eDate');
 
 end

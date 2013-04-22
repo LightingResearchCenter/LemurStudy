@@ -60,8 +60,8 @@ ratioDayNightAI = dayAI/nightAI;
 figure1 = figure;
 paperPosition = [0 0 11 8.5];
 set(figure1,'PaperUnits','inches',...
-    'PaperType','usletter',...
-    'PaperOrientation','landscape',...
+    'PaperSize',[11 8.5],...
+    'PaperOrientation','portrait',...
     'PaperPositionMode','manual',...
     'PaperPosition',paperPosition,...
     'Units','inches',...
@@ -116,8 +116,7 @@ hold(axes1);
 set(axes1,'Box','off','TickDir','out');
 ymax = ceil(max([max(sAI),max(sCS)])/.5)*.5;
 area2 = area(axes1,TI,idxNight*ymax);
-set(area2,'FaceColor','b','EdgeColor','none','DisplayName','Night');
-alpha(.5);
+set(area2,'FaceColor',[145 177 255]/255,'EdgeColor','none','DisplayName','Night');
 area1 = area(axes1,TI,sAI);
 set(area1,'FaceColor',[.2 .2 .2],'EdgeColor','none','DisplayName','Activity');
 plot1 = plot(axes1,TI,sCS);
@@ -151,7 +150,7 @@ h3 = h2;
 y3 = y2;
 w3 = workWidth/2+xSpace;
 x3 = xMargin+w3;
-notes = cell(13,1);
+notes = cell(14,1);
 notes{1} = ['Phasor Magnitude: ', num2str(sMagnitude,'%.2f')];
 notes{2} = ['Phasor Angle: ', num2str(sAngle,'%.2f'),' hours'];
 notes{3} = ' ';
@@ -162,9 +161,10 @@ notes{7} = ['Average CS: ', num2str(mean(sCS),'%.2f')];
 notes{8} = ['Mag w/ harmonics: ' num2str(MagH,'%.3f')];
 notes{9} = ['Mag 1st harmonic: ' num2str(abs(f24),'%.3f')];
 notes{10} = ' ';
-notes{11} = ['Daytime Activity: ',num2str(perDayAI,'%.2f'),'%'];
-notes{12} = ['Nighttime Activity: ',num2str(perNightAI,'%.2f'),'%'];
-notes{13} = ['Day/Night Acyivity Ratio: ',num2str(ratioDayNightAI,'%.3f')];
+notes{11} = ['Total activity per day: ',num2str(totalAI/days,'%.2f')];
+notes{12} = ['Daytime activity per day: ',num2str(dayAI/days,'%.2f'),'  ',num2str(perDayAI,'%.2f'),'%'];
+notes{13} = ['Nighttime activity per day: ',num2str(nightAI/days,'%.2f'),'  ',num2str(perNightAI,'%.2f'),'%'];
+notes{14} = ['Day/Night activity ratio: ',num2str(ratioDayNightAI,'%.3f')];
 text3 = annotation(figure1,'textbox', [x3 y3 w3 h3], 'String',notes);
 set(text3,'EdgeColor','none','HorizontalAlignment','left',...
     'VerticalAlignment','middle','FontSize',11);
