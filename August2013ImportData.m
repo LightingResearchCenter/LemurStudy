@@ -34,7 +34,7 @@ fid = fopen(dataPath);
 data = textscan(fid, '%f%f%f%f%f%f', 'HeaderLines', 1);
 
 % Parse variables
-time0 = data{1,2} + datenum('01-Jan-1900');
+time0 = data{1,2} + 693960;
 lux0 = data{1,3};
 CS0 = data{1,5};
 AI0 = data{1,6};
