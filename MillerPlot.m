@@ -72,12 +72,13 @@ set(plot1,...
     'DisplayName','CS');
 
 % Plot solar conditions
-load(fullfile('astronomicalData','sunrise_set.mat'),'sunRise','sunSet');
-yLims = ylim(gca);
-patch2 = plotSun(dateRange,sunRise,sunSet,yLims);
+% load(fullfile('astronomicalData','sunrise_set.mat'),'sunRise','sunSet');
+% yLims = ylim(gca);
+% patch2 = plotSun(dateRange,sunRise,sunSet,yLims);
 
 % Create legend
-legend1 = legend([area1, plot1, patch2],'Location','EastOutside');
+% legend1 = legend([area1, plot1, patch2],'Location','EastOutside');
+legend1 = legend([area1, plot1],'Location','EastOutside');
 set(legend1,'Orientation','vertical');
 
 
@@ -87,8 +88,9 @@ set(legend1,'Orientation','vertical');
 % Create title
 dateRangeStr = datestr(dateRange,'mm/dd/yyyy');
 text2 = [dateRangeStr(1,:),' - ',dateRangeStr(2,:)];
-text3 = [num2str(days,'%.0f'),' days'];
-title([Title,'   ',text2,'   ',text3]);
+% text3 = [num2str(days,'%.0f'),' days'];
+% title([Title,'   ',text2,'   ',text3]);
+title([Title,'   ',text2]);
 
 % Close box around plot
 line([0 24],[Ymax Ymax],'Color','k');

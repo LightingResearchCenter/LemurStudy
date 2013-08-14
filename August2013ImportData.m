@@ -12,7 +12,7 @@ lux = cell(n,1);
 CS = cell(n,1);
 AI = cell(n,1);
 
-startTime = datenum(2013,8,6,6,0,0);
+startTime = datenum(2013,8,7,6,0,0);
 stopTime = datenum(2013,8,13,6,0,0);
 
 for i1 = 1:n
