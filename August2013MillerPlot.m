@@ -72,7 +72,7 @@ for i1 = 1:n
     y = y0 + d*(i1-1);
     plotPosition = [x y w h];
     % Generate figure
-    MillerPlot(timeIndex{i1},AI1{i1},CS1{i1},floor(timeIndex{i1}(end)),...
+    MillerPlot2013(timeIndex{i1},AI1{i1},CS1{i1},floor(timeIndex{i1}(end)),...
         groupName{i1},plotPosition,dateRange(i1,:));
 end
 % Save to disk

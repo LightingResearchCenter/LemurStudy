@@ -1,4 +1,4 @@
-function MillerPlot(TI, AI, CS, days, Title, plotPosition, dateRange)
+function MillerPlot2013(TI, AI, CS, days, Title, plotPosition, dateRange)
 %MILLERPLOT Creates overlapping area plots of activity index and circadian
 %stimulus for a 24 hour period.
 %   time is in MATLAB date time series format
@@ -72,7 +72,7 @@ set(plot1,...
     'DisplayName','CS');
 
 % Plot solar conditions
-load(fullfile('astronomicalData','sunrise_set.mat'),'sunRise','sunSet');
+load(fullfile('astronomicalData','sunrise_set2013.mat'),'sunRise','sunSet');
 yLims = ylim(gca);
 patch2 = plotSun(dateRange,sunRise,sunSet,yLims);
 
