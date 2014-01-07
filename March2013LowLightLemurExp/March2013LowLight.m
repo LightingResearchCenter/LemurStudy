@@ -4,8 +4,6 @@ function March2013LowLight
 
 close all;
 
-addpath('IO');
-
 projectDir = fullfile([filesep,filesep,'ROOT'],'projects',...
     'Lemur''s research','March2013LowLightLemurExp');
 
@@ -50,7 +48,7 @@ for i1 = 1:2
         idx2 = time >= sDate(i2) & time < eDate(i2);
         days = ceil(eDate(i2)-sDate(i2));
         Title = [num2str(dimeSN{i1}),' - ',stage{i2}];
-        pseudoMillerPlot(time(idx2),AI(idx2),Lux(idx2),days,Title,lightsOn,lightsOff);
+        pseudoMillerPlot(time(idx2),Activity(idx2),Lux(idx2),days,Title,lightsOn,lightsOff);
         fileName = [num2str(dimeSN{i1}),'_',datestr(sDate(i2),'yyyy-mm-dd'),'_',stage{i2}];
         print(gcf,'-dpdf',fullfile(projectDir,[fileName,'.pdf']));
         close;
