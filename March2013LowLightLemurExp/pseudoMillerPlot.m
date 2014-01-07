@@ -112,7 +112,7 @@ text4 = ['Light/Dark Activity Ratio: ',num2str(ldRatio,p1)];
 text5 = ['Mean Light-time Lux: ',num2str(luxLight,p1)];
 text6 = ['Mean Dark-time Lux: ',num2str(luxDark,p1)];
 textBlock = {text1;text2;text3;text4;text5;text6};
-text(xLims(1)+.01*xLims(2),yLims(2)-.06*yLims(2),textBlock);
+text(xLims(1)+.01*xLims(2),yLims(2)-.08*yLims(2),textBlock);
 
 end
 
