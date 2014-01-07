@@ -1,4 +1,4 @@
-function pseudoMillerPlot(datetime,AI,lux,days,Title,lightsOn,lightsOff)
+function pseudoMillerPlot(datetime,AI,lux,days,Title,lightsOn,lightsOff,buffer)
 %MILLERPLOT Creates overlapping area plots of activity index and circadian
 %stimulus for a 24 hour period.
 %   time is in MATLAB date time series format
@@ -41,10 +41,10 @@ mAI = circshift(mAI,delta);
 % Smooth activity
 sAI = smooth(mAI,5);
 
-idxLight = hour >= lightsOn & hour < lightsOff;
-idxDark1 = hour < lightsOn;
-idxDark2 = hour >= lightsOff;
-idxDark = idxDark1 | idxDark2;
+buffer = buffer/60/24;
+idxLight = hour >= lightsOn + buffer & hour <= lightsOff - buffer;
+idxDark1 = hour <= lightsOn - buffer;
+idxDark2 = hour >= lightsOff + buffer;
 adjustedAI = mAI - 0.05;
 activityLight = trapz(hour(idxLight),adjustedAI(idxLight));
 activityDark = trapz(hour(idxDark1),adjustedAI(idxDark1)) + trapz(hour(idxDark2),adjustedAI(idxDark2));
@@ -54,6 +54,7 @@ percentDark = activityDark*100/activityTotal;
 ldRatio = activityLight/activityDark;
 luxLight = mean(mLux(idxLight));
 luxDark = mean(mLux(idxDark));
+ldLuxRatio = luxLight/luxDark;
 
 % Create area plots
 % Create figure
@@ -111,7 +112,8 @@ text3 = ['Total Activity Factor: ',num2str(activityTotal,p1)];
 text4 = ['Light/Dark Activity Ratio: ',num2str(ldRatio,p1)];
 text5 = ['Mean Light-time Lux: ',num2str(luxLight,p1)];
 text6 = ['Mean Dark-time Lux: ',num2str(luxDark,p1)];
-textBlock = {text1;text2;text3;text4;text5;text6};
+text7 = ['Light/Dark Lux Ratio: ',num2str(ldLuxRatio,p1)];
+textBlock = {text1;text2;text3;text4;text5;text6;text7};
 text(xLims(1)+.01*xLims(2),yLims(2)-.08*yLims(2),textBlock);
 
 end

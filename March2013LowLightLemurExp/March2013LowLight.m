@@ -36,6 +36,8 @@ eDate(end) = datenum([Y,M,26,0,0,0]);
 lightsOn = 5.25;
 lightsOff = 17.25;
 
+buffer = 0;
+
 for i1 = 1:2
     
     load(filePath{i1},'time','Lux','Activity');
@@ -48,7 +50,7 @@ for i1 = 1:2
         idx2 = time >= sDate(i2) & time < eDate(i2);
         days = ceil(eDate(i2)-sDate(i2));
         Title = [num2str(dimeSN{i1}),' - ',stage{i2}];
-        pseudoMillerPlot(time(idx2),Activity(idx2),Lux(idx2),days,Title,lightsOn,lightsOff);
+        pseudoMillerPlot(time(idx2),Activity(idx2),Lux(idx2),days,Title,lightsOn,lightsOff,buffer);
         fileName = [num2str(dimeSN{i1}),'_',datestr(sDate(i2),'yyyy-mm-dd'),'_',stage{i2}];
         print(gcf,'-dpdf',fullfile(projectDir,[fileName,'.pdf']));
         close;
