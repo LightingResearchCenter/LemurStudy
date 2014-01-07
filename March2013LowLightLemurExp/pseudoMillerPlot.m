@@ -51,6 +51,7 @@ activityTotal = trapz(hour,adjustedAI);
 percentLight = activityLight*100/activityTotal;
 percentDark = activityDark*100/activityTotal;
 ldRatio = activityLight/activityDark;
+meanLux = mean(mLux);
 
 % Create area plots
 % Create figure
@@ -106,7 +107,8 @@ text1 = ['Dark Activity Factor: ',num2str(activityDark,p1),'  ',num2str(percentD
 text2 = ['Light Activity Factor: ',num2str(activityLight,p1),'  ',num2str(percentLight,p2),'%'];
 text3 = ['Total Activity Factor: ',num2str(activityTotal,p1)];
 text4 = ['Light/Dark Activity Ratio: ',num2str(ldRatio,p1)];
-text(xLims(1)+.01*xLims(2),yLims(2)-.06*yLims(2),{text1;text2;text3;text4});
+text5 = ['Mean Lux: ',num2str(meanLux,p1)];
+text(xLims(1)+.01*xLims(2),yLims(2)-.06*yLims(2),{text1;text2;text3;text4;text5});
 
 end
 
