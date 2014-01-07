@@ -35,6 +35,10 @@ sDate = datenum(sDateVec);
 eDate = circshift(sDate,-1);
 eDate(end) = datenum([2014,1,2,9,20,0]);
 
+% Set lights on/off
+lightsOn = 6.5;
+lightsOff = 18.5;
+
 for i1 = 1:2
     
     [time,Lux,~,~,AI] = importDime(filePath{i1},dimeSN{i1});
@@ -47,7 +51,7 @@ for i1 = 1:2
         idx2 = time >= sDate(i2) & time < eDate(i2);
         days = ceil(eDate(i2)-sDate(i2));
         Title = [num2str(dimeSN{i1}),' - ',name{i1},' - ',stage{i2}];
-        pseudoMillerPlot(time(idx2), AI(idx2), Lux(idx2), days, Title);
+        pseudoMillerPlot(time(idx2),AI(idx2),Lux(idx2),days,Title,lightsOn,lightsOff);
         fileName = [num2str(dimeSN{i1}),'_',datestr(sDate(i2),'yyyy-mm-dd'),'_',stage{i2}];
         print(gcf,'-dpdf',fullfile(projectDir,[fileName,'.pdf']));
         close;
