@@ -10,8 +10,8 @@ projectDir = fullfile([filesep,filesep,'ROOT'],'projects',...
     'Lemur''s research','2014-01-06_AlbifronsTrial');
 
 filePath = ...
-    {fullfile(projectDir,'Dime336pendant_Subject336_06Jan2014.txt');...
-     fullfile(projectDir,'Dime338pendant_Subject338_06Jan2014.txt')};
+    {fullfile(projectDir,'Dime336pendant_Subject336_06Jan2014raw.txt');...
+     fullfile(projectDir,'Dime338pendant_Subject338_06Jan2014raw.txt')};
 dimeSN = {336;338};
 name = {'Matthan';'Kish'};
 
@@ -42,8 +42,8 @@ lightsOff = 18.5;
 buffer = 0;
 
 for i1 = 1:2
-    
-    [time,Lux,~,~,AI] = importDime(filePath{i1},dimeSN{i1});
+    [time,Lux,~,Activity] = CalibrateDimesimeterDownloadFile_21Feb2013(filePath{i1});
+%     [time,Lux,~,~,Activity] = importDime(filePath{i1},dimeSN{i1});
     
     % Set Lux values below 0.005 to 0.005
     idx1 = Lux < 0.005;
@@ -53,7 +53,7 @@ for i1 = 1:2
         idx2 = time >= sDate(i2) & time < eDate(i2);
         days = ceil(eDate(i2)-sDate(i2));
         Title = [num2str(dimeSN{i1}),' - ',name{i1},' - ',stage{i2}];
-        pseudoMillerPlot(time(idx2),AI(idx2),Lux(idx2),days,Title,lightsOn,lightsOff,buffer);
+        pseudoMillerPlot(time(idx2),Activity(idx2),Lux(idx2),days,Title,lightsOn,lightsOff,buffer);
         fileName = [num2str(dimeSN{i1}),'_',datestr(sDate(i2),'yyyy-mm-dd'),'_',stage{i2}];
         print(gcf,'-dpdf',fullfile(projectDir,[fileName,'.pdf']));
         close;

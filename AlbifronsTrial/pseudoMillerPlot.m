@@ -45,6 +45,7 @@ buffer = buffer/60/24;
 idxLight = hour >= lightsOn + buffer & hour <= lightsOff - buffer;
 idxDark1 = hour <= lightsOn - buffer;
 idxDark2 = hour >= lightsOff + buffer;
+idxDark = idxDark1 | idxDark2;
 adjustedAI = mAI - 0.05;
 activityLight = trapz(hour(idxLight),adjustedAI(idxLight));
 activityDark = trapz(hour(idxDark1),adjustedAI(idxDark1)) + trapz(hour(idxDark2),adjustedAI(idxDark2));
@@ -114,7 +115,7 @@ text5 = ['Mean Light-time Lux: ',num2str(luxLight,p1)];
 text6 = ['Mean Dark-time Lux: ',num2str(luxDark,p1)];
 text7 = ['Light/Dark Lux Ratio: ',num2str(ldLuxRatio,p1)];
 textBlock = {text1;text2;text3;text4;text5;text6;text7};
-text(xLims(1)+.01*xLims(2),yLims(2)-.08*yLims(2),textBlock);
+text(xLims(1)+.01*xLims(2),yLims(2)-.09*yLims(2),100,textBlock);
 
 end
 
