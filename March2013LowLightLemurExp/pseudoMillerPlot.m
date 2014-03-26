@@ -25,7 +25,8 @@ lux = reshape(lux,dayIdx,[]);
 AI = reshape(AI,dayIdx,[]);
 
 % Average data across days
-mLux = mean(lux,2);
+% mLux = mean(lux,2);
+mLux = exp(mean(log(lux),2));
 mAI = mean(AI,2);
 
 % Trim time index
@@ -41,7 +42,7 @@ mAI = circshift(mAI,delta);
 % Smooth activity
 sAI = smooth(mAI,5);
 
-buffer = buffer/60/24;
+buffer = buffer/60;
 idxLight = hour >= lightsOn + buffer & hour <= lightsOff - buffer;
 idxDark1 = hour <= lightsOn - buffer;
 idxDark2 = hour >= lightsOff + buffer;

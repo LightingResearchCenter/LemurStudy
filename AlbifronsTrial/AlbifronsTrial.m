@@ -22,24 +22,29 @@ stage = {'habituation';...
          'dark2'};
 nStages = numel(stage);
 
-% Set start dates of experiments
-Y = 2013;
-M = 12;
-sDateVec = [Y, M,  5, 0, 0, 0;...
-            Y, M, 20, 0, 0, 0;...
-            Y, M, 23, 0, 0, 0;...
-            Y, M, 26, 0, 0, 0;...
-            Y, M, 29, 0, 0, 0];
-sDate = datenum(sDateVec);
-% Set end dates of experiments
-eDate = circshift(sDate,-1);
-eDate(end) = datenum([2014,1,2,9,20,0]);
-
 % Set lights on/off
 lightsOn = 6.5;
 lightsOff = 18.5;
 
-buffer = 0;
+% Set start dates of experiments
+Y = 2013;
+M = 12;
+sDateVec = [Y, M,  5, lightsOff, 0, 0;...
+            Y, M, 20, lightsOff, 0, 0;...
+            Y, M, 23, lightsOff, 0, 0;...
+            Y, M, 26, lightsOff, 0, 0;...
+            Y, M, 29, lightsOff, 0, 0];
+sDate = datenum(sDateVec);
+% Set end dates of experiments
+eDateVec = [Y, M, 20, lightsOff, 0, 0;...
+            Y, M, 23, lightsOff, 0, 0;...
+            Y, M, 26, lightsOff, 0, 0;...
+            Y, M, 29, lightsOff, 0, 0;...
+            Y, M, 31, lightsOff, 0, 0];
+eDate = datenum(eDateVec);
+eDate(end) = datenum([2014,1,2,9,20,0]);
+
+buffer = 30;
 
 for i1 = 1:2
     [time,Lux,~,Activity] = CalibrateDimesimeterDownloadFile_21Feb2013(filePath{i1});

@@ -19,24 +19,28 @@ stage = {'habituation';...
          'dark2'};
 nStages = numel(stage);
 
-% Set start dates of experiments
-Y = 2013;
-M = 3;
-sDateVec = [Y, M,  1, 0, 0, 0;...
-            Y, M, 15, 0, 0, 0;...
-            Y, M, 18, 0, 0, 0;...
-            Y, M, 21, 0, 0, 0;...
-            Y, M, 24, 0, 0, 0];
-sDate = datenum(sDateVec);
-% Set end dates of experiments
-eDate = circshift(sDate,-1);
-eDate(end) = datenum([Y,M,26,0,0,0]);
-
 % Set lights on/off
 lightsOn = 5.25;
 lightsOff = 17.25;
 
-buffer = 0;
+% Set start dates of experiments
+Y = 2013;
+M = 3;
+sDateVec = [Y, M,  1, lightsOff, 0, 0;...
+            Y, M, 14, lightsOff, 0, 0;...
+            Y, M, 17, lightsOff, 0, 0;...
+            Y, M, 20, lightsOff, 0, 0;...
+            Y, M, 23, lightsOff, 0, 0];
+sDate = datenum(sDateVec);
+% Set end dates of experiments
+eDateVec = [Y, M, 14, lightsOff, 0, 0;...
+            Y, M, 17, lightsOff, 0, 0;...
+            Y, M, 20, lightsOff, 0, 0;...
+            Y, M, 23, lightsOff, 0, 0;...
+            Y, M, 25, lightsOff, 0, 0];
+eDate = datenum(eDateVec);
+
+buffer = 30;
 
 for i1 = 1:2
     
@@ -52,7 +56,7 @@ for i1 = 1:2
         Title = [num2str(dimeSN{i1}),' - ',stage{i2}];
         pseudoMillerPlot(time(idx2),Activity(idx2),Lux(idx2),days,Title,lightsOn,lightsOff,buffer);
         fileName = [num2str(dimeSN{i1}),'_',datestr(sDate(i2),'yyyy-mm-dd'),'_',stage{i2}];
-        print(gcf,'-dpdf',fullfile(projectDir,[fileName,'.pdf']));
+        print(gcf,'-dpdf',fullfile(projectDir,'testPlots',[fileName,'.pdf']));
         close;
     end
     clear('time','Lux','Activity');
