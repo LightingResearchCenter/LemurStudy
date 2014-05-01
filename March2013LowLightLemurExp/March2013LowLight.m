@@ -4,6 +4,9 @@ function March2013LowLight
 
 close all;
 
+[parentDir,~,~] = fileparts(pwd);
+addpath(parentDir);
+
 projectDir = fullfile([filesep,filesep,'ROOT'],'projects',...
     'Lemur''s research','March2013LowLightLemurExp');
 
@@ -40,15 +43,14 @@ eDateVec = [Y, M, 14, lightsOff, 0, 0;...
             Y, M, 25, lightsOff, 0, 0];
 eDate = datenum(eDateVec);
 
-buffer = 30;
+buffer = 0;
 
 for i1 = 1:2
     
     load(filePath{i1},'time','Lux','Activity');
     
     % Set Lux values below 0.005 to 0.005
-    idx1 = Lux < 0.005;
-    Lux(idx1) = 0.005;
+    Lux = choptothreshold(Lux,0.0001);
     
     for i2 = 1:nStages
         idx2 = time >= sDate(i2) & time < eDate(i2);

@@ -4,7 +4,9 @@ function AlbifronsTrial
 
 close all;
 
-addpath('IO');
+[parentDir,~,~] = fileparts(pwd);
+
+addpath(parentDir,'IO');
 
 projectDir = fullfile([filesep,filesep,'ROOT'],'projects',...
     'Lemur''s research','2014-01-06_AlbifronsTrial');
@@ -44,15 +46,13 @@ eDateVec = [Y, M, 20, lightsOff, 0, 0;...
 eDate = datenum(eDateVec);
 eDate(end) = datenum([2014,1,2,9,20,0]);
 
-buffer = 30;
+buffer = 0;
 
 for i1 = 1:2
     [time,Lux,~,Activity] = CalibrateDimesimeterDownloadFile_21Feb2013(filePath{i1});
-%     [time,Lux,~,~,Activity] = importDime(filePath{i1},dimeSN{i1});
     
     % Set Lux values below 0.005 to 0.005
-    idx1 = Lux < 0.005;
-    Lux(idx1) = 0.005;
+    Lux = choptothreshold(Lux,0.0001);
     
     for i2 = 1:nStages
         idx2 = time >= sDate(i2) & time < eDate(i2);
@@ -60,7 +60,7 @@ for i1 = 1:2
         Title = [num2str(dimeSN{i1}),' - ',name{i1},' - ',stage{i2}];
         pseudoMillerPlot(time(idx2),Activity(idx2),Lux(idx2),days,Title,lightsOn,lightsOff,buffer);
         fileName = [num2str(dimeSN{i1}),'_',datestr(sDate(i2),'yyyy-mm-dd'),'_',stage{i2}];
-        print(gcf,'-dpdf',fullfile(projectDir,[fileName,'.pdf']));
+        print(gcf,'-dpdf',fullfile(projectDir,'testPlots',[fileName,'.pdf']));
         close;
     end
 end

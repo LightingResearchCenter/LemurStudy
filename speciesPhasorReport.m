@@ -1,7 +1,14 @@
 function speciesPhasorReport
 %SPECIESPHASORREPORT Generate Phasor Report for each species
 %   Requires PhasorReport package
-load('speciesData.mat');
+
+dataDir = '\\root\projects\Lemur''s-Research\Lemur Data';
+dataFile = 'speciesData.mat';
+dataPath = fullfile(dataDir,dataFile);
+
+reportDir = fullfile(dataDir,'phasorReports');
+
+load(dataPath);
 addpath('PhasorReport');
 
 n = length(unqSpecies);
@@ -11,8 +18,8 @@ for i1 = 1:n
     Title = {[unqName{i1},' (',unqSpecies{i1},')'];[datestr(dateRange(i1,1),'mm/dd/yyyy'),' - ',datestr(dateRange(i1,2),'mm/dd/yyyy')]};
     PhasorReport(timeIndex{i1}+dateRange(i1,1),CS1{i1},AI1{i1},time(idx),CS(idx),AI(idx),Title,dateRange(i1,:));
     % Save to disk
-    fileName = fullfile('phasorReports',unqSpecies{i1});
-    print(gcf,'-dpdf',[fileName,'.pdf'],'-painters');
+    reportPath = fullfile(reportDir,unqSpecies{i1});
+    print(gcf,'-dpdf',[reportPath,'.pdf'],'-painters');
     close;
 end
 

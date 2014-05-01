@@ -1,4 +1,4 @@
-function pseudoMillerPlot(datetime,AI,lux,days,Title,lightsOn,lightsOff,buffer)
+function pseudoMillerPlot(timeArray,activityArray,luxArray,days,Title,lightStart,lightStop,buffer)
 %MILLERPLOT Creates overlapping area plots of activity index and circadian
 %stimulus for a 24 hour period.
 %   time is in MATLAB date time series format
@@ -6,28 +6,30 @@ function pseudoMillerPlot(datetime,AI,lux,days,Title,lightsOn,lightsOff,buffer)
 %   lux is illuminance
 %   days is number of days experiment ran for
 
-TI = datetime - datetime(1); % time index in days from start
+[activity,lux] = lightdarkcomparison(timeArray,activityArray,luxArray,lightStart,lightStop,buffer);
+
+TI = timeArray - timeArray(1); % time index in days from start
 
 % Trim data to length of experiment
 delta = find(TI <= days); % indices of data to keep
-datetime = datetime(delta);
+timeArray = timeArray(delta);
 TI = TI(delta);
-AI = AI(delta);
-lux = lux(delta);
+activityArray = activityArray(delta);
+luxArray = luxArray(delta);
 
 % Reshape data into columns of full days
 % ASSUMES CONSTANT SAMPLING RATE
 dayIdx = find(TI >= 1,1,'first') - 1;
 extra = rem(length(TI),dayIdx)-1;
-lux(end-extra:end) = [];
-AI(end-extra:end) = [];
-lux = reshape(lux,dayIdx,[]);
-AI = reshape(AI,dayIdx,[]);
+luxArray(end-extra:end) = [];
+activityArray(end-extra:end) = [];
+luxArray = reshape(luxArray,dayIdx,[]);
+activityArray = reshape(activityArray,dayIdx,[]);
 
 % Average data across days
 % mLux = mean(lux,2);
-mLux = exp(mean(log(lux),2));
-mAI = mean(AI,2);
+mLux = exp(mean(log(luxArray),2));
+mAI = mean(activityArray,2);
 
 % Trim time index
 TI = TI(1:dayIdx);
@@ -35,28 +37,12 @@ TI = TI(1:dayIdx);
 hour = TI*24;
 
 % Find start time offset from midnight
-delta = -find(datetime >= ceil(datetime(1)),1,'first');
+delta = -find(timeArray >= ceil(timeArray(1)),1,'first');
 % Appropriately offset the data
 mLux = circshift(mLux,delta);
 mAI = circshift(mAI,delta);
 % Smooth activity
 sAI = smooth(mAI,5);
-
-buffer = buffer/60;
-idxLight = hour >= lightsOn + buffer & hour <= lightsOff - buffer;
-idxDark1 = hour <= lightsOn - buffer;
-idxDark2 = hour >= lightsOff + buffer;
-idxDark = idxDark1 | idxDark2;
-adjustedAI = mAI - 0.05;
-activityLight = trapz(hour(idxLight),adjustedAI(idxLight));
-activityDark = trapz(hour(idxDark1),adjustedAI(idxDark1)) + trapz(hour(idxDark2),adjustedAI(idxDark2));
-activityTotal = trapz(hour,adjustedAI);
-percentLight = activityLight*100/activityTotal;
-percentDark = activityDark*100/activityTotal;
-ldRatio = activityLight/activityDark;
-luxLight = mean(mLux(idxLight));
-luxDark = mean(mLux(idxDark));
-ldLuxRatio = luxLight/luxDark;
 
 % Create area plots
 % Create figure
@@ -87,19 +73,19 @@ xlim(haxes(2),[0 24]);
 % line([17.25 17.25],yLims);
 
 % Create axes labels
-ylabel(haxes(2),'Illuminance');
+ylabel(haxes(2),'Illuminance [lux]');
 ylabel(haxes(1),'Activity');
 
 % Create legend
-legend1 = legend('AI - Activity Index','lux - Illuminance');
+legend1 = legend('Activity','Illuminance');
 set(legend1,'Orientation','horizontal','Location','NorthOutside');
 
 % Create x-axis label
 xlabel('hour');
 
 % Create title
-StartDate = datestr(datetime(1),'mmm dd, yyyy HH:MM');
-EndDate = datestr(datetime(end),'mmm dd, yyyy HH:MM');
+StartDate = datestr(timeArray(1),'mmm dd, yyyy HH:MM');
+EndDate = datestr(timeArray(end),'mmm dd, yyyy HH:MM');
 DateRange = [StartDate,' - ',EndDate];
 title({Title;DateRange});
 
@@ -108,15 +94,19 @@ xLims = xlim(gca);
 yLims = ylim(gca);
 p1 = '%.3f';
 p2 = '%.1f';
-text1 = ['Dark Activity Factor: ',num2str(activityDark,p1),'  ',num2str(percentDark,p2),'%'];
-text2 = ['Light Activity Factor: ',num2str(activityLight,p1),'  ',num2str(percentLight,p2),'%'];
-text3 = ['Total Activity Factor: ',num2str(activityTotal,p1)];
-text4 = ['Light/Dark Activity Ratio: ',num2str(ldRatio,p1)];
-text5 = ['Mean Light-time Lux: ',num2str(luxLight,p1)];
-text6 = ['Mean Dark-time Lux: ',num2str(luxDark,p1)];
-text7 = ['Light/Dark Lux Ratio: ',num2str(ldLuxRatio,p1)];
-textBlock = {text1;text2;text3;text4;text5;text6;text7};
-text(xLims(1)+.01*xLims(2),yLims(2)-.09*yLims(2),100,textBlock);
+textBlock = cell(9,1);
+
+textBlock{1} = ['Dark(Dim) Activity:   ',num2str(activity.dark,p1),'  ',num2str(activity.percentDark,p2),'%'];
+textBlock{2} = ['    Morning Activity: ',num2str(activity.morning,p1),'  ',num2str(activity.percentMorning,p2),'%'];
+textBlock{3} = ['    Evening Activity: ',num2str(activity.evening,p1),'  ',num2str(activity.percentEvening,p2),'%'];
+textBlock{4} = ['Light Activity:       ',num2str(activity.light,p1),'  ',num2str(activity.percentLight,p2),'%'];
+textBlock{5} = ['Total Activity:       ',num2str(activity.total,p1)];
+textBlock{6} = ['L/D Activity Ratio:   ',num2str(activity.ldRatio,p1)];
+textBlock{7} = ['Light-time Lux:       ',num2str(lux.light,p1)];
+textBlock{8} = ['Dark-time Lux:        ',num2str(lux.dark,p1)];
+textBlock{9} = ['L/D Lux Ratio:        ',num2str(lux.ldRatio,p1)];
+
+text(xLims(1)+.01*xLims(2),yLims(2)-.12*yLims(2),100,textBlock);
 
 end
 
