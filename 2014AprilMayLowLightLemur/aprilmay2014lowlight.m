@@ -83,7 +83,7 @@ for i1 = 1:2
     idx1 = timeArray >= sDate(1) & timeArray <= eDate(end);
     nDaysPerSheet = 14;
     generatereport(animalName{i1},timeArray(idx1),activityArray(idx1),...
-        illuminanceArray(idx1),'lux',[10^-4,10^3],nDaysPerSheet,daysigramDir,animalName{i1});
+        illuminanceArray(idx1),'lux',[10^-2,10^3],nDaysPerSheet,daysigramDir,animalName{i1});
     
     for i2 = 1:nStages-1
         idx2 = timeArray >= sDate(i2) & timeArray < eDate(i2);
