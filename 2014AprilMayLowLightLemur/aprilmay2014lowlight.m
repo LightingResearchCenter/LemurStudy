@@ -22,10 +22,7 @@ function aprilmay2014lowlight
 
 close all;
 
-[parentDir,~,~] = fileparts(pwd);
-[parentParentDir,~,~] = fileparts(parentDir);
-daysigramToolkit = fullfile(parentParentDir,'DaysigramReport');
-addpath(parentDir,daysigramToolkit,'IO');
+initializedependencies;
 
 projectDir = fullfile([filesep,filesep,'ROOT'],'projects',...
     'Lemur''s-Research','2014AprilMayLowLightLemurCatta');
@@ -69,27 +66,49 @@ eDateVec = [Y, M,  2, lightsOff, 0, 0;...
             Y, M, 13, lightsOff , 0, 0];
 eDate = datenum(eDateVec);
 
-buffer = 0;
+buffer = 30;
+[hFigure,~,~,units] = initializefigure1(1,'on');
 
 for i1 = 1:2
-    [timeArray,illuminanceArray,~,activityArray] = CalibrateDimesimeterDownloadFile_21Feb2013(filePath{i1});
+    [timeArray,illuminanceArray,CLA,activityArray] = CalibrateDimesimeterDownloadFile_21Feb2013(filePath{i1});
+    timeArray = timeArray(:);
+    illuminanceArray = illuminanceArray(:);
+    CLA = CLA(:);
+    activityArray = activityArray(:);
+    
     if dimeSN{i1} == 338 % Correct for resets
         timeArray = timeArray - 2.088498589349911;
     end
+    CLA = choptothreshold(CLA,0);
+    csArray = CSCalc_postBerlin_12Aug2011(CLA);
     
     % Set Lux values below 0.005 to 0.005
-    illuminanceArray = choptothreshold(illuminanceArray,0.0001);
+%     illuminanceArray = choptothreshold(illuminanceArray,0.005);
+    illuminanceArray = choptothreshold(illuminanceArray,0);
     
     idx1 = timeArray >= sDate(1) & timeArray <= eDate(end);
     nDaysPerSheet = 14;
-    generatereport(animalName{i1},timeArray(idx1),activityArray(idx1),...
-        illuminanceArray(idx1),'lux',[10^-2,10^3],nDaysPerSheet,daysigramDir,animalName{i1});
+%     generatereport(animalName{i1},timeArray(idx1),activityArray(idx1),...
+%         illuminanceArray(idx1),'lux',[10^-2,10^3],nDaysPerSheet,daysigramDir,animalName{i1});
+    % Daysigram
+    sheetTitle = ['April/May 2014, Subject: ',animalName{i1},', Dimesimeter: ',num2str(dimeSN{i1})];
+    daysigramFileID = ['subject',animalName{i1}];
+    generatedaysigram(sheetTitle,timeArray(idx1),activityArray(idx1),illuminanceArray(idx1),...
+        'lux',[10^-2,10^5],14,daysigramDir,daysigramFileID)
     
     for i2 = 1:nStages-1
         idx2 = timeArray >= sDate(i2) & timeArray < eDate(i2);
+        
+        % Light and Health Report/ Phasor Analysis
+        figTitle = 'April/May 2014';
+        generatereport(fullfile(projectDir,'testPlots'),timeArray(idx2),csArray(idx2),activityArray(idx2),...
+        illuminanceArray(idx2),[animalName{i1},' ',stage{i2}],hFigure,units,figTitle);
+        clf;
+        
+        
         days = ceil(eDate(i2)-sDate(i2));
         Title = [animalName{i1},' ',animalSex{i1},' - ',stage{i2}];
-        pseudoMillerPlot(timeArray(idx2),activityArray(idx2),illuminanceArray(idx2),days,Title,lightsOn,lightsOff,buffer);
+        pseudoMillerPlot(timeArray(idx2),activityArray(idx2),illuminanceArray(idx2),Title,lightsOn,lightsOff,buffer);
         fileName = [animalName{i1},'_',datestr(sDate(i2),'yyyy-mm-dd'),'_',stage{i2}];
         print(gcf,'-dpdf',fullfile(projectDir,'testPlots',[fileName,'.pdf']));
         close;
@@ -97,6 +116,7 @@ for i1 = 1:2
     clear('timeArray','illuminanceArray','activityArray');
 end
 
+close all;
 
 end
 
