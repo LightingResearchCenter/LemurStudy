@@ -55,7 +55,7 @@ eDateVec = [Y, M, 22, lightsOff, 0, 0;...
 eDate = datenum(eDateVec);
 
 buffer = 30;
-[hFigure,~,~,units] = initializefigure1(3,'on');
+% [hFigure,~,~,units] = initializefigure1(3,'on');
 
 for i1 = 1:2
     [timeArray,illuminanceArray,CLA,activityArray] = CalibrateDimesimeterDownloadFile_21Feb2013(filePath{i1});
@@ -110,7 +110,6 @@ for i1 = 1:2
         reports.composite.compositeReport(plotDir,Phasor,Actigraphy,Average,Miller,[animalName{i1},' ',stage{i2}],num2str(dimeSN{i1}),figTitle)
         
         clf;
-        [hFigure,~,~,units] = initializefigure1(4,'on');
         days = ceil(eDate(i2)-sDate(i2));
         Title = [animalName{i1},' ',animalSex{i1},' - ',stage{i2}];
         pseudoMillerPlot(timeArray(idx2),activityArray(idx2),illuminanceArray(idx2),Title,lightsOn,lightsOff,buffer);

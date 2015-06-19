@@ -26,7 +26,7 @@ ldLuxRatio = luxLight/luxDark;
 
 % Create area plots
 % Create figure
-figure1 = figure;
+figure1 = figure(500);
 set(figure1,'PaperUnits','inches',...
     'PaperType','usletter',...
     'PaperOrientation','landscape',...
@@ -45,7 +45,7 @@ set(hline1,...
     'DisplayName','AI - Activity Index');
 set(haxes,'Parent',figure1,'XTick',0:2:24,'YColor','k');
 ylim(haxes(1),[0 0.35]);
-ylim(haxes(1),[10^-4 10^2]);
+ylim(haxes(2),[10^-4 10^2]);
 xlim(haxes(1),[0 24]);
 xlim(haxes(2),[0 24]);
 
@@ -79,7 +79,7 @@ text5 = ['Mean Light-time Lux: ',num2str(luxLight,p1)];
 text6 = ['Mean Dark-time Lux: ',num2str(luxDark,p1)];
 text7 = ['Light/Dark Lux Ratio: ',num2str(ldLuxRatio,p1)];
 textBlock = {text1;text2;text3;text4;text5;text6;text7};
-text(xLims(1)+.01*xLims(2),yLims(2)-.09*yLims(2),100,textBlock);
+hText = text(xLims(1)+.01*xLims(2),yLims(2)-.09*yLims(2),0,textBlock);
 
 end
 
